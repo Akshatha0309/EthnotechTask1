@@ -1,8 +1,10 @@
 
 
-public interface Payment  {
+public class Payment  {
     
-    void pay(double amount);
+    void pay(double amount){
+        
+    }
        
     
 }

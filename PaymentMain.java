@@ -3,7 +3,7 @@ public class PaymentMain {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Payment Method");
-        System.out.println("1.Online");
+        System.out.println("1. Online");
         System.out.println("2. Card");
         System.out.println("3. Cash");
         System.out.println("Enter choice");
