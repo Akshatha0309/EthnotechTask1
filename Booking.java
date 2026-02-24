@@ -35,4 +35,9 @@ public class Booking {
         return bookingId + "   " + customerId + "   " + from + "   " +
                to + "   " + pickupTime + "   " + dropTime + "   " + amount;
     }
+
+    public void display() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'display'");
+    }
 }
