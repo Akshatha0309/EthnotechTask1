@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat App</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #ece5dd;
+        }
+
+        .container {
+            width: 400px;
+            margin: 40px auto;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #075e54;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .chat-container {
+            display: none;
+        }
+
+        .messages {
+            height: 250px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .message {
+            padding: 8px;
+            margin: 5px;
+            border-radius: 5px;
+        }
+
+        .sent {
+            background: #dcf8c6;
+            text-align: right;
+        }
+
+        .received {
+            background: #fff;
+        }
+
+        #users li {
+            cursor: pointer;
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        #users li:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LOGIN -->
+    <div class="box" id="loginBox">
+        <h3>Login</h3>
+        <input id="loginUser" placeholder="Enter user number (1/2/3)">
+        <input id="loginPass" type="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="box" id="registerBox">
+        <h3>Register</h3>
+        <input id="regUser" placeholder="Username">
+        <input id="regPass" type="password" placeholder="Password">
+        <button onclick="register()">Register</button>
+    </div>
+
+    <!-- CHAT -->
+    <div class="box chat-container" id="chatBox">
+        <h3>Chat 💬</h3>
+
+        <!-- USERS -->
+        <ul id="users"></ul>
+
+        <!-- MESSAGES -->
+        <div class="messages" id="chat"></div>
+
+        <!-- INPUT -->
+        <input id="msg" placeholder="Type message">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+
+<script>
+let stompClient = null;
+let currentUser = null;
+let currentReceiver = null;
+
+// REGISTER
+function register() {
+    fetch("http://localhost:8080/auth/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: document.getElementById("regUser").value,
+            password: document.getElementById("regPass").value
+        })
+    })
+    .then(res => res.text())
+    .then(data => alert(data))
+    .catch(err => console.error(err));
+}
+
+// LOGIN
+function login() {
+    currentUser = parseInt(document.getElementById("loginUser").value);
+
+    if (!currentUser) {
+        alert("Enter user number like 1,2,3");
+        return;
+    }
+
+    alert("Logged in as User " + currentUser);
+
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("registerBox").style.display = "none";
+    document.getElementById("chatBox").style.display = "block";
+
+    connect();
+    loadUsers();
+}
+
+// CONNECT
+function connect() {
+    const socket = new SockJS('http://localhost:8080/chat');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function () {
+        console.log("Connected");
+
+        stompClient.subscribe('/topic/messages', function (msg) {
+            const message = JSON.parse(msg.body);
+
+            if (
+                (message.senderId == currentUser && message.receiverId == currentReceiver) ||
+                (message.senderId == currentReceiver && message.receiverId == currentUser)
+            ) {
+                showMessage(message);
+            }
+        });
+    });
+}
+
+// LOAD USERS
+function loadUsers() {
+    const users = [1, 2, 3];
+
+    const userList = document.getElementById("users");
+    userList.innerHTML = "";
+
+    users.forEach(user => {
+        if (user !== currentUser) {
+            const li = document.createElement("li");
+            li.innerText = "User " + user;
+
+            li.onclick = () => {
+                currentReceiver = user;
+                document.getElementById("chat").innerHTML = "";
+                loadChatHistory();
+            };
+
+            userList.appendChild(li);
+        }
+    });
+}
+
+// SEND MESSAGE
+function sendMessage() {
+    const msg = document.getElementById("msg").value;
+
+    if (!msg.trim()) return;
+
+    if (!currentReceiver) {
+        alert("Select a user first!");
+        return;
+    }
+
+    stompClient.send("/app/private", {}, JSON.stringify({
+        senderId: currentUser,
+        receiverId: currentReceiver,
+        content: msg
+    }));
+
+    document.getElementById("msg").value = "";
+}
+
+// SHOW MESSAGE
+function showMessage(message) {
+    const div = document.createElement("div");
+
+    div.classList.add("message");
+
+    if (message.senderId == currentUser) {
+        div.classList.add("sent");
+    } else {
+        div.classList.add("received");
+    }
+
+    div.innerText = message.content;
+
+    document.getElementById("chat").appendChild(div);
+}
+
+// LOAD HISTORY
+function loadChatHistory() {
+    fetch(`http://localhost:8080/messages/chat?senderId=${currentUser}&receiverId=${currentReceiver}`)
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("chat").innerHTML = "";
+        data.forEach(msg => showMessage(msg));
+    });
+}
+</script>
+
+</body>
+</html>

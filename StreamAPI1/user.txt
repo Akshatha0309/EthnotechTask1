@@ -1,0 +1,5 @@
+Welcome to the Java Streams Demo
+Today we are learning how to read files in Java
+Streams make file processing simple and efficient
+Practice coding every day to improve programming skills
+Success comes from consistency and curiosity
