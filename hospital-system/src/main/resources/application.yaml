@@ -1,7 +1,7 @@
 
 spring:
   datasource:
-    url: jdbc:mysql://db:3306/hospital_db
+    url: ${DB_URL}
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
