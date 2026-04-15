@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advanced Live Clock</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial;
+            transition: 0.5s;
+        }
+
+        .dark {
+            background-color: #111;
+            color: #00ffcc;
+        }
+
+        .light {
+            background-color: #f4f4f4;
+            color: #222;
+        }
+
+        #clock {
+            font-size: 60px;
+            margin-top: 20px;
+            animation: glow 1s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #00ffcc; }
+            to { text-shadow: 0 0 30px #00ffcc; }
+        }
+
+        button, select, input {
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body class="dark">
+
+    <h1>Advanced Live Clock</h1>
+
+    <div id="date"></div>
+    <div id="clock">00:00:00 AM</div>
+
+    <br>
+
+    <!-- Dark/Light Toggle -->
+    <button onclick="toggleTheme()">Toggle Theme</button>
+
+    <!-- Timezone -->
+    <select id="timezone" onchange="updateClock()">
+        <option value="Asia/Kolkata">India</option>
+        <option value="America/New_York">New York</option>
+        <option value="Europe/London">London</option>
+        <option value="Asia/Tokyo">Tokyo</option>
+    </select>
+
+    <br>
+
+    <!-- Alarm -->
+    <input type="time" id="alarmTime">
+    <button onclick="setAlarm()">Set Alarm</button>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
