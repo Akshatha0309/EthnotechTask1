@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BMI Calculator</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    width: 320px;
+    text-align: center;
+}
+
+input, select {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.result {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+.underweight { color: #3498db; }
+.normal { color: #2ecc71; }
+.overweight { color: #f39c12; }
+.obese { color: #e74c3c; }
+
+.hidden {
+    display: none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2>BMI Calculator</h2>
+
+    <select id="unit" onchange="switchUnit()">
+        <option value="metric">Metric (cm, kg)</option>
+        <option value="imperial">Imperial (ft, in, lb)</option>
+    </select>
+
+    <!-- Metric -->
+    <div id="metricInputs">
+        <input type="number" id="cm" placeholder="Height (cm)">
+        <input type="number" id="kg" placeholder="Weight (kg)">
+    </div>
+
+    <!-- Imperial -->
+    <div id="imperialInputs" class="hidden">
+        <input type="number" id="ft" placeholder="Height (feet)">
+        <input type="number" id="inch" placeholder="Height (inches)">
+        <input type="number" id="lb" placeholder="Weight (pounds)">
+    </div>
+
+    <button onclick="calculateBMI()">Calculate BMI</button>
+
+    <div class="result" id="result"></div>
+    <div id="category"></div>
+
+</div>
+
+<script>
+
+function switchUnit() {
+    let unit = document.getElementById("unit").value;
+
+    document.getElementById("metricInputs").classList.toggle("hidden", unit !== "metric");
+    document.getElementById("imperialInputs").classList.toggle("hidden", unit !== "imperial");
+}
+
+function calculateBMI() {
+    let unit = document.getElementById("unit").value;
+    let bmi;
+
+    if (unit === "metric") {
+        let cm = parseFloat(document.getElementById("cm").value);
+        let kg = parseFloat(document.getElementById("kg").value);
+
+        if (!cm || !kg) {
+            alert("Enter valid values");
+            return;
+        }
+
+        let height = cm / 100;
+        bmi = kg / (height * height);
+
+    } else {
+        let ft = parseFloat(document.getElementById("ft").value) || 0;
+        let inch = parseFloat(document.getElementById("inch").value) || 0;
+        let lb = parseFloat(document.getElementById("lb").value);
+
+        if (!lb || (ft === 0 && inch === 0)) {
+            alert("Enter valid values");
+            return;
+        }
+
+        let totalInches = (ft * 12) + inch;
+        bmi = (lb / (totalInches * totalInches)) * 703;
+    }
+
+    bmi = bmi.toFixed(2);
+
+    let category = "";
+    let color = "";
+
+    if (bmi < 18.5) {
+        category = "Underweight";
+        color = "underweight";
+    } else if (bmi < 24.9) {
+        category = "Normal";
+        color = "normal";
+    } else if (bmi < 29.9) {
+        category = "Overweight";
+        color = "overweight";
+    } else {
+        category = "Obese";
+        color = "obese";
+    }
+
+    let resultDiv = document.getElementById("result");
+    resultDiv.innerText = "BMI: " + bmi;
+    resultDiv.className = "result " + color;
+
+    document.getElementById("category").innerText = category;
+}
+
+</script>
+
+</body>
+</html>
