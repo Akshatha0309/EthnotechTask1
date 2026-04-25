@@ -1,0 +1,207 @@
+/* =========================
+FILE: style.css
+========================= */
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, sans-serif;
+}
+
+body{
+  background:#f2f5f9;
+  transition:0.4s;
+  color:#222;
+}
+
+.dark{
+  background:#121212;
+  color:white;
+}
+
+.container{
+  width:95%;
+  max-width:1300px;
+  margin:auto;
+  padding:20px;
+}
+
+h1{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.top-cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.1);
+  margin-bottom:20px;
+  transition:0.4s;
+}
+
+.dark .card{
+  background:#1e1e1e;
+}
+
+.balance-card{
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  color:white;
+}
+
+.income-card{
+  background:linear-gradient(135deg,#11998e,#38ef7d);
+  color:white;
+}
+
+.expense-card{
+  background:linear-gradient(135deg,#ff416c,#ff4b2b);
+  color:white;
+}
+
+.savings-card{
+  background:linear-gradient(135deg,#f7971e,#ffd200);
+  color:white;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:15px;
+}
+
+input,
+select,
+button{
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-size:16px;
+}
+
+input,
+select{
+  border:2px solid #ddd;
+}
+
+button{
+  background:#667eea;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  transform:scale(1.03);
+}
+
+.transaction{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px;
+  margin-bottom:12px;
+  border-radius:12px;
+  background:#f5f5f5;
+  animation:fadeIn 0.4s ease;
+}
+
+.dark .transaction{
+  background:#2b2b2b;
+}
+
+.transaction-left{
+  display:flex;
+  flex-direction:column;
+}
+
+.transaction-right{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.plus{
+  color:green;
+  font-weight:bold;
+}
+
+.minus{
+  color:red;
+  font-weight:bold;
+}
+
+.delete-btn{
+  background:red;
+}
+
+.theme-btn{
+  position:fixed;
+  top:20px;
+  right:20px;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  font-size:20px;
+}
+
+.progress-container{
+  width:100%;
+  height:20px;
+  background:#ddd;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#11998e,#38ef7d);
+  transition:0.5s;
+}
+
+.chart-section{
+  height:400px;
+}
+
+.export-section{
+  text-align:center;
+  margin-top:20px;
+}
+
+@keyframes fadeIn{
+
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+}
+
+@media(max-width:700px){
+
+  .transaction{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  .transaction-right{
+    width:100%;
+    justify-content:space-between;
+  }
+
+}
